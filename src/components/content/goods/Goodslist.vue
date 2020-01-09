@@ -1,17 +1,27 @@
 <template>
-  <div id="tar-bar">
-    <slot></slot>
+  <div class="goods">
+    <Goodsitem v-for="(item,index) in goods" :key="index" :goositem="item" />
   </div>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import Goodsitem from './Goodsitem'
 export default {
-  name: "Tabbar",
+  name: "",
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    Goodsitem,
+  },
+  props:{
+    goods:{
+      type:Array,
+      default(){
+        return []
+      }
+    }
+  },
   data() {
     //这里存放数据
     return {};
@@ -36,14 +46,12 @@ export default {
 };
 </script>
 <style  scoped>
-#tar-bar {
+.goods{
   display: flex;
-  background-color: #f6f6f6;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-  box-shadow: 0px -2px 1px rgb(100, 100, 100, 0.1);
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding-left: 2px;
+  padding-right: 2px;
 }
+
 </style>

@@ -19,35 +19,35 @@ new Vue({
 }).$mount('#app')
 // axios.defaults.baseURL = 'http://zcsc.bjlitian.com:8716';
 // axios.defaults.timeout = 5000;
-import {request} from './network/request'
-request({
-  url: '/system/orderConfirm',
-  method: 'post',
-  params: {
-    is_true: 1,
-    menu: 2
-  },
-}).then(res =>{
-  console.log(res)
-})
-axios.all([
-  request({
-    url:'/system/orderConfirm',
-    method:'post',
-    params:{
-      is_true: 1,
-    menu: 2
-    }
-  }),
-  request({
-    url:'/system/orderExpire',
-    method:'post',
-    params:{
-      status:1,
-      type:2,
-      expire:12
-    }
-  })
-]).then(res => {
-  console.log(res)
-})
+// import {request} from './network/request'
+// request({
+//   url: '/system/orderConfirm',
+//   method: 'post',
+//   params: {
+//     is_true: 1,
+//     menu: 2
+//   },
+// }).then(res =>{
+//   console.log(res)
+// })
+// axios.all([
+//   request({
+//     url:'/system/orderConfirm',
+//     method:'post',
+//     params:{
+//       is_true: 1,
+//     menu: 2
+//     }
+//   }),
+//   request({
+//     url:'/system/orderExpire',
+//     method:'post',
+//     params:{
+//       status:1,
+//       type:2,
+//       expire:12
+//     }
+//   })
+// ]).then(res => {
+//   console.log(res)
+// })

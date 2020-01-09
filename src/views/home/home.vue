@@ -1,71 +1,153 @@
 <template>
-  <div>
-    <h3>首页</h3>
+  <div id="home" class="warper">
+    <nav-bar class="nav-home">
+      <div slot="left">上一步</div>
+      <div slot="center">购物街</div>
+      <div slot="right">下一步</div>
+    </nav-bar>
+      <!-- @scroll="contentScroll"
+      @pullingUp="loadMore" -->
+      <!-- <tabcontrol :titles="['流行','新款','精选']" class="tabcontrol" @tabclick="tabclick" /> -->
+    <scroll
+      class="content"
+      ref="scroll"
+      @scroll="contentScroll"
+      @pullingUp="loadMore"
+      :data="showgoods"
+      :pull-up-load="true"
+      :probe-type="3"
+    >
+      <div>
+        <Homeswiper :banners="banners" />
+        <hometuijian :recommends="banners" />
+        <fucher />
+        <tabcontrol :titles="['流行','新款','精选']" class="tabcontrol" @tabclick="tabclick" />
+        <Goodslist :goods="showgoods" />
+      </div>
+    </scroll>
+
+    <back-top @click.native="backtop" v-show="isshow"/>
   </div>
 </template>
 
 <script>
+import NavBar from "components/common/navbar/NavBar";
+import Tabcontrol from "components/content/tabcontrol/Tabcontrol";
+import Scroll from "components/common/scroll/Scroll";
+import BScroll from "@better-scroll/core";
+import Pullup from "@better-scroll/pull-up";
+import BackTop from 'components/content/Backtop/BackTop'
+BScroll.use(Pullup);
+
+import Homeswiper from "./children/homeswiper";
+import Hometuijian from "./children/hometuijian";
+import Fucher from "./children/homefucher";
+import Goodslist from "components/content/goods/Goodslist";
+
+import { gethome, getgoods } from "network/home";
+import { NEW, POP, SELL, BACKTOP_DISTANCE } from "@/common/const";
+import { type } from "os";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 
 export default {
   name: "",
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    NavBar,
+    Tabcontrol,
+    Scroll,
+    BackTop,
+
+    Homeswiper,
+    Hometuijian,
+    Fucher,
+    Goodslist
+  },
   data() {
     //这里存放数据
-    return {};
+    return {
+      banners: [],
+      recommends: [],
+      goodsList: {
+        pop: { page: 1, list: [] },
+        new: { page: 1, list: [] },
+        sell: { page: 1, list: [] }
+      },
+      currentType: "pop",
+      isshow:false
+    };
   },
   //监听属性 类似于data概念
   computed: {
-    abc: function() {
-      return this.$store.state.abc;
-    },
-    nianling: function() {
-      return this.$store.getters.dayu20;
+    showgoods() {
+      return this.goodsList[this.currentType].list;
     }
   },
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
-    open() {
-      this.$message("这是一条消息提示");
+    // 方法
+    tabclick(index) {
+      // console.log(index)
+      switch (index) {
+        case 0:
+          this.currentType = "pop";
+          break;
+        case 1:
+          this.currentType = "new";
+          break;
+        case 2:
+          this.currentType = "sell";
+          break;
+      }
+      
     },
-    openVn() {
-        const h = this.$createElement;
-        this.$message({
-          message: h('p', null, [
-            h('span', null, '内容可以是 '),
-            h('i', { style: 'color: teal' }, 'VNode')
-          ])
-        });
-      },
-    add: function() {
-      this.$store.commit("add");
+    backtop(){
+      console.log(11)
+    this.$refs.scroll.scrollTo(0, 0, 300);
     },
-    der: function() {
-      this.$store.commit("der");
+    contentScroll(position) {
+      // 1.决定tabFixed是否显示
+      this.isTabFixed = position.y < -this.tabOffsetTop;
+
+      // 2.决定backTop是否显示
+      this.isshow = position.y < -BACKTOP_DISTANCE;
     },
-    addcout: function(count) {
-      this.$store.commit("addcout", count);
+     loadMore() {
+      this.getHomeProducts(this.currentType);
+   
     },
-    tianjiaxuesheng: function() {
-      const stu = { id: 2, name: "liming666", age: 35 };
-      this.$store.commit("tianjiaxuesheng", stu);
-    },
-    gaibian: function() {
-      this.$store.dispatch("agaibian", "我携带的信息").then(res => {
-        console.log("里面已经调用完成");
+    // 网络请求
+    gethome() {
+      gethome().then(res => {
         console.log(res);
+        this.banners = res.data.banner.list;
+        this.recommends = res.data.recommend.list;
+      });
+    },
+    getHomeProducts(type) {
+      getgoods(type, this.goodsList[type].page).then(res => {
+        //  console.log(res.data.list)
+        //  console.log([])
+        const goodsList = res.data.list;
+        this.goodsList[type].list.push(...goodsList);
+        this.goodsList[type].page += 1;
+
+        this.$refs.scroll.scroll.finishPullup()
       });
     }
-    // updateInfo:function(){
-    //   this.$store.dispatch('xiugai','我是patload ')
-    // }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    // 1请求主页上半部分
+    this.gethome(),
+      // 2 请求商品列表数据
+      this.getHomeProducts("pop");
+    this.getHomeProducts("new");
+    this.getHomeProducts("sell");
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
@@ -78,4 +160,30 @@ export default {
 };
 </script>
 <style  scoped>
+#home {
+  height: 100vh;
+  /* padding-top: 44px;
+  padding-bottom: 50px; */
+}
+.nav-home {
+  background-color: var(--color-tint);
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: 9;
+}
+.tabcontrol {
+  position: sticky;
+  top: 44px;
+  z-index: 9;
+}
+.content {
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+}
 </style>

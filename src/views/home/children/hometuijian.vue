@@ -1,6 +1,11 @@
 <template>
-  <div id="tar-bar">
-    <slot></slot>
+  <div class="recommds">
+    <div v-for="(item,index) in recommends" :key="index" class="recommdsitem">
+      <a :href="item.link">
+        <img :src="item.image" alt />
+        <div>{{item.title}}</div>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -9,9 +14,17 @@
 //例如：import 《组件名称》 from '《组件路径》';
 
 export default {
-  name: "Tabbar",
+  name: "",
   //import引入的组件需要注入到对象中才能使用
   components: {},
+  props: {
+    recommends: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
   data() {
     //这里存放数据
     return {};
@@ -36,14 +49,22 @@ export default {
 };
 </script>
 <style  scoped>
-#tar-bar {
+.recommds {
   display: flex;
-  background-color: #f6f6f6;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-  box-shadow: 0px -2px 1px rgb(100, 100, 100, 0.1);
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  padding-bottom: 20px;
+  padding-top: 10px;
+  border-bottom: 8px solid #eee;
+}
+.recommdsitem {
+  flex: 1;
+}
+.recommdsitem img {
+  widows: 50px;
+  height: 45px;
+  margin-bottom: 10px;
+ padding-top: 10px
 }
 </style>

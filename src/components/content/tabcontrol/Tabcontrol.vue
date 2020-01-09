@@ -1,6 +1,13 @@
 <template>
-  <div id="tar-bar">
-    <slot></slot>
+  <div class="tabcontrol">
+    <div v-for="(item,index) in titles" 
+    :key="index" 
+    class="tabcontrol-item" 
+    :class="{active:index === currentindex}"
+    @click="tabcick(index)"
+    >
+      <span>{{item}}</span>
+    </div>
   </div>
 </template>
 
@@ -9,19 +16,34 @@
 //例如：import 《组件名称》 from '《组件路径》';
 
 export default {
-  name: "Tabbar",
+  name: "",
   //import引入的组件需要注入到对象中才能使用
   components: {},
+  props: {
+    titles: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
   data() {
     //这里存放数据
-    return {};
+    return {
+      currentindex:0,
+    };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    tabcick(index){
+      this.currentindex = index;
+      this.$emit('tabclick',index)
+    }
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -36,14 +58,25 @@ export default {
 };
 </script>
 <style  scoped>
-#tar-bar {
+.tabcontrol {
   display: flex;
-  background-color: #f6f6f6;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-  box-shadow: 0px -2px 1px rgb(100, 100, 100, 0.1);
+  text-align: center;
+  font-size: 16px;
+  background-color:  #fff;
+}
+.tabcontrol-item {
+  flex: 1;
+  height: 44px;
+  line-height: 44px;
+}
+.tabcontrol-item span{
+  padding: 5px;
+}
+.active{
+  color: var(--color-high-text);
+}
+.active span{
+  border-bottom: 2px solid  var(--color-tint); 
+
 }
 </style>

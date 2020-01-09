@@ -1,6 +1,6 @@
 <template>
-  <div id="tar-bar">
-    <slot></slot>
+  <div class="back-top">
+    <img src="~assets/img/2.png" alt="">
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 
 export default {
-  name: "Tabbar",
+  name: "",
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
@@ -36,14 +36,13 @@ export default {
 };
 </script>
 <style  scoped>
-#tar-bar {
-  display: flex;
-  background-color: #f6f6f6;
+.back-top{
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-  box-shadow: 0px -2px 1px rgb(100, 100, 100, 0.1);
+  right: 10px;
+  bottom: 55px;
+}
+.back-top img{
+  width: 40px;
+  height: 40px;
 }
 </style>
