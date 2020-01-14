@@ -1,24 +1,28 @@
 <template>
-  <div class="goods">
-    <Goodsitem v-for="(item,index) in goods" :key="index" :goods="item" />
-  </div>
+    <swiper class="swiperitem">
+      <swiper-item  v-for="(item,index) in topImages" :key="index" >
+          <img :src="item" alt  />
+      </swiper-item>
+    </swiper>
 </template>
 
 <script>
+import { Swiper, SwiperItem } from "components/common/swiper";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import Goodsitem from './Goodsitem'
+
 export default {
   name: "",
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Goodsitem,
+    Swiper,
+    SwiperItem
   },
-  props:{
-    goods:{
-      type:Array,
-      default(){
-        return []
+  props: {
+    topImages: {
+      type: Array,
+      default() {
+        return [];
       }
     }
   },
@@ -31,7 +35,9 @@ export default {
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -46,12 +52,8 @@ export default {
 };
 </script>
 <style  scoped>
-.goods{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  padding-left: 2px;
-  padding-right: 2px;
+.swiperitem{
+  height: 300px;
+  overflow: hidden;
 }
-
 </style>

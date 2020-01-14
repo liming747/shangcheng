@@ -1,12 +1,12 @@
 <template>
-  <div class="goods">
-    <img :src="goositem.show.img" alt="">
+  <div class="goods" @click="itemclick"> 
+    <img :src="showimage" alt="" @load="imageload">
     <div class="goods-info">
-      <p>{{goositem.title}}</p>
+      <p>{{goods.title}}</p>
       <span>特价：</span>
-      <span class="price">{{goositem.price}}</span>
+      <span class="price">{{goods.price}}</span>
       <span>已收藏</span>
-      <span class="collect">{{goositem.cfav}}</span>
+      <span class="collect">{{goods.cfav}}</span>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   props:{
-    goositem:{
+    goods:{
       type:Object,
       default(){
          return {}
@@ -32,11 +32,29 @@ export default {
     return {};
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    showimage(){
+      return this.goods.image || this.goods.show.img
+   }
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    imageload(){
+      this.$bus.$emit('imageload')
+    },
+    itemclick(){
+      console.log("跳转详情页")
+      this.$router.push('/detail/' + this.goods.iid)
+      // this.$router.push({
+      //   path :'/detail',
+      //   query:{
+      //     id :111
+      //   }
+      // })
+    }
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素 ）

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import BScroll from 'better-scroll'
+import BScroll from '@better-scroll/core'
 
 	export default {
 		name: "Scroll",
@@ -47,7 +47,7 @@
         this.scroll.on('scroll', pos => {
           this.$emit('scroll', pos)
         })
-
+    
         // 3.监听上拉到底部
         this.scroll.on('pullingUp', () => {
           console.log('上拉加载');
@@ -55,6 +55,7 @@
         })
       },
       refresh() {
+        console.log('-----')
         this.scroll && this.scroll.refresh && this.scroll.refresh()
       },
       finishPullUp() {
@@ -62,13 +63,16 @@
       },
       scrollTo(x, y, time) {
 		    this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time)
+      },
+      getscrollY(){
+         return this.scroll ? this.scroll.y : 0
       }
     },
-    watch: {
-		  data() {
-        setTimeout(this.refresh, 20)
-      }
-    }
+    // watch: {
+		//   data() {
+    //     setTimeout(this.refresh, 20)
+    //   }
+    // }
 	}
 </script>
 

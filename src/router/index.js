@@ -7,7 +7,8 @@ import VueRouter from 'vue-router'
 const Home = () => import('../views/home/home')
 const Cart = () => import('../views/cart/cart')
 const Fenlei = () => import('../views/fenlei/fenlei')
-const Profile = () => import('../views/profile/geren.vue')
+const Profile = () => import('../views/profile/geren')
+const Detail = () => import('../views/detail/detail')
 // const About = () => import('../components/About')
 // const User = () => import('../components/User')
 // const Homenews = () => import('../components/Homenews')
@@ -51,6 +52,13 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/detail/:iid',
+    meta:{
+      title:'详情'
+    },
+    component: Detail,
   }
 ]
 // 实例

@@ -5,9 +5,15 @@
       <div slot="center">购物街</div>
       <div slot="right">下一步</div>
     </nav-bar>
-      <!-- @scroll="contentScroll"
-      @pullingUp="loadMore" -->
-      <!-- <tabcontrol :titles="['流行','新款','精选']" class="tabcontrol" @tabclick="tabclick" /> -->
+    <tabcontrol 
+    :titles="['流行','新款','精选']" 
+    @tabclick="tabclick" 
+    ref="tabcontrol1" 
+    class="tabcontroltop"
+    v-show="isTabFixed"
+    />
+
+
     <scroll
       class="content"
       ref="scroll"
@@ -18,15 +24,15 @@
       :probe-type="3"
     >
       <div>
-        <Homeswiper :banners="banners" />
+        <Homeswiper :banners="banners" @sweiperimageload="sweiperimageload" />
         <hometuijian :recommends="banners" />
         <fucher />
-        <tabcontrol :titles="['流行','新款','精选']" class="tabcontrol" @tabclick="tabclick" />
+        <tabcontrol :titles="['流行','新款','精选']" @tabclick="tabclick" ref="tabcontrol2" />
         <Goodslist :goods="showgoods" />
       </div>
     </scroll>
 
-    <back-top @click.native="backtop" v-show="isshow"/>
+    <back-top @click.native="backtop" v-show="isshow" />
   </div>
 </template>
 
@@ -36,7 +42,7 @@ import Tabcontrol from "components/content/tabcontrol/Tabcontrol";
 import Scroll from "components/common/scroll/Scroll";
 import BScroll from "@better-scroll/core";
 import Pullup from "@better-scroll/pull-up";
-import BackTop from 'components/content/Backtop/BackTop'
+import BackTop from "components/content/Backtop/BackTop";
 BScroll.use(Pullup);
 
 import Homeswiper from "./children/homeswiper";
@@ -45,6 +51,7 @@ import Fucher from "./children/homefucher";
 import Goodslist from "components/content/goods/Goodslist";
 
 import { gethome, getgoods } from "network/home";
+import { debounce } from "../../common/utils";
 import { NEW, POP, SELL, BACKTOP_DISTANCE } from "@/common/const";
 import { type } from "os";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
@@ -75,7 +82,10 @@ export default {
         sell: { page: 1, list: [] }
       },
       currentType: "pop",
-      isshow:false
+      isshow: false,
+      tabOffsetTop: 0,
+      isTabFixed: false,
+      sateY:0
     };
   },
   //监听属性 类似于data概念
@@ -102,11 +112,12 @@ export default {
           this.currentType = "sell";
           break;
       }
-      
+      this.$refs.tabcontrol1.currentindex = index;
+      this.$refs.tabcontrol2.currentindex = index;
     },
-    backtop(){
-      console.log(11)
-    this.$refs.scroll.scrollTo(0, 0, 300);
+    backtop() {
+      console.log(11);
+      this.$refs.scroll.scrollTo(0, 0, 300);
     },
     contentScroll(position) {
       // 1.决定tabFixed是否显示
@@ -115,10 +126,14 @@ export default {
       // 2.决定backTop是否显示
       this.isshow = position.y < -BACKTOP_DISTANCE;
     },
-     loadMore() {
+    loadMore() {
       this.getHomeProducts(this.currentType);
-   
     },
+    sweiperimageload() {
+      this.tabOffsetTop = this.$refs.tabcontrol2.$el.offsetTop;
+      console.log(this.tabOffsetTop);
+    },
+
     // 网络请求
     gethome() {
       gethome().then(res => {
@@ -135,7 +150,7 @@ export default {
         this.goodsList[type].list.push(...goodsList);
         this.goodsList[type].page += 1;
 
-        this.$refs.scroll.scroll.finishPullup()
+        this.$refs.scroll.finishPullUp();
       });
     }
   },
@@ -149,14 +164,28 @@ export default {
     this.getHomeProducts("sell");
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    const refresh = debounce(this.$refs.scroll.refresh, 200);
+    this.$bus.$on("imageload", () => {
+      refresh();
+    });
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
   updated() {}, //生命周期 - 更新之后
   beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+  destroyed() {
+    
+  }, //生命周期 - 销毁完成
+  activated() {
+    this.$refs.scroll.scrollTo(0,this.sateY,0)
+    this.$refs.scroll.refresh()
+  }, //如果页面有keep-alive缓存功能，这个函数会触发
+  deactivated() {
+    this.sateY = this.$refs.scroll.getscrollY();
+    console.log(this.sateY)
+  },
 };
 </script>
 <style  scoped>
@@ -168,15 +197,11 @@ export default {
 .nav-home {
   background-color: var(--color-tint);
   color: white;
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
+  position: relative;
   z-index: 9;
 }
-.tabcontrol {
-  position: sticky;
-  top: 44px;
+.tabcontroltop{
+  position: relative;
   z-index: 9;
 }
 .content {

@@ -6,8 +6,9 @@ import axios from 'axios'
 
 // import  './components/element-#111212/index.css'
 //产品提示信息👇
-Vue.config.productionTip = false
+Vue.config.productionTip = false,
 
+Vue.prototype.$bus =  new Vue()
 new Vue({
   router,
   store,

@@ -4,8 +4,8 @@ export function request(config) {
     // 1创建axios实例
     const instanse = axios.create({
       // baseURL: 'http://123.207.32.32:8000',
-      // baseURL: 'http://123.207.32.32:8000/api/w1',
-      baseURL: 'http://106.54.54.237:8000/api/w1',//备用地址
+      // baseURL: 'http://123.207.32.32:8000/api/hy',
+      baseURL: 'http://106.54.54.237:8000/api/hy',//备用地址
       timeout: 5000
     })
     // 2axios 拦截
