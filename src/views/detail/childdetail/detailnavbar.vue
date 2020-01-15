@@ -43,6 +43,7 @@ export default {
   methods: {
     titlecilck(index){
       this.currentindex = index
+      this.$emit('titleCilck',index)
     },
     backclick(){
       this.$router.back()

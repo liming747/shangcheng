@@ -1,5 +1,5 @@
 import {POP, NEW, SELL} from "./const";
-
+import { debounce } from "./utils";
 export const backTopMixin = {
   data: function () {
     return {
@@ -35,4 +35,22 @@ export const tabControlMixin = {
       console.log(this.currentType);
     }
   }
+}
+
+
+export const itemlisennermixin = {
+  data(){
+    return{
+      itemImglisener:null,
+      refresh:null
+    }
+  },
+  mounted() {
+    this.refresh = debounce(this.$refs.scroll.refresh, 200);
+    this.itemImglisener = () => {
+      this.refresh();
+    }
+    this.$bus.$on("imageload", this.itemImglisener);
+    console.log('我是混入内容')
+  },
 }

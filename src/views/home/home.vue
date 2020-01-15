@@ -19,7 +19,7 @@
       ref="scroll"
       @scroll="contentScroll"
       @pullingUp="loadMore"
-      :data="showgoods"
+  
       :pull-up-load="true"
       :probe-type="3"
     >
@@ -52,6 +52,7 @@ import Goodslist from "components/content/goods/Goodslist";
 
 import { gethome, getgoods } from "network/home";
 import { debounce } from "../../common/utils";
+import {itemlisennermixin} from '../../common/mixin'
 import { NEW, POP, SELL, BACKTOP_DISTANCE } from "@/common/const";
 import { type } from "os";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
@@ -71,6 +72,7 @@ export default {
     Fucher,
     Goodslist
   },
+  mixins:[itemlisennermixin],
   data() {
     //这里存放数据
     return {
@@ -126,12 +128,14 @@ export default {
       // 2.决定backTop是否显示
       this.isshow = position.y < -BACKTOP_DISTANCE;
     },
+    // 上拉加载
     loadMore() {
       this.getHomeProducts(this.currentType);
     },
+    // 获取组件位置
     sweiperimageload() {
       this.tabOffsetTop = this.$refs.tabcontrol2.$el.offsetTop;
-      console.log(this.tabOffsetTop);
+      // console.log(this.tabOffsetTop);
     },
 
     // 网络请求
@@ -165,10 +169,7 @@ export default {
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    const refresh = debounce(this.$refs.scroll.refresh, 200);
-    this.$bus.$on("imageload", () => {
-      refresh();
-    });
+   
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
@@ -176,15 +177,17 @@ export default {
   updated() {}, //生命周期 - 更新之后
   beforeDestroy() {}, //生命周期 - 销毁之前
   destroyed() {
-    
   }, //生命周期 - 销毁完成
   activated() {
     this.$refs.scroll.scrollTo(0,this.sateY,0)
     this.$refs.scroll.refresh()
   }, //如果页面有keep-alive缓存功能，这个函数会触发
   deactivated() {
+    // 保存Y值
     this.sateY = this.$refs.scroll.getscrollY();
-    console.log(this.sateY)
+    // console.log(this.sateY)
+    // 取消全局事件监听
+    this.$bus.$off('imageload',this.itemImglisener)
   },
 };
 </script>

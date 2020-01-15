@@ -55,7 +55,7 @@ import BScroll from '@better-scroll/core'
         })
       },
       refresh() {
-        console.log('-----')
+        console.log('--已执行刷新---')
         this.scroll && this.scroll.refresh && this.scroll.refresh()
       },
       finishPullUp() {

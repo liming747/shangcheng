@@ -36,7 +36,9 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    
+    // detailswiper(){
+    //   this.$emit('detailswiper')
+    // }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},

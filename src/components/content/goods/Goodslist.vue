@@ -16,7 +16,7 @@ export default {
   },
   props:{
     goods:{
-      type:Array,
+      // type:Array,
       default(){
         return []
       }
