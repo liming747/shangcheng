@@ -1,8 +1,8 @@
 <template>
   <div id="detail">
-    <detailnavbar class="detailnavbar" @titleCilck="titlecilck" ref="nav"/>
+    <detailnavbar class="detailnavbar" @titleCilck="titlecilck" ref="nav" />
     <scroll
-      class="content" 
+      class="content"
       ref="scroll"
       :data="[topImages, goods, shop, detailInfo, paramInfo, commentInfo, Recommend]"
       @scroll="contentScroll"
@@ -19,7 +19,8 @@
         <goodslist ref="recommend" :goods="Recommend" />
       </div>
     </scroll>
-    <back-top @click.native="backtop" v-show="isshow" />
+    <Detail-bottom-bar />
+    <back-top @click.native="backtop" v-show="showBackTop" />
   </div>
 </template>
 
@@ -33,7 +34,9 @@ import DetailShopInfo from "./childdetail/DetailShopInfo";
 import DetailGoodsInfo from "./childdetail/DetailGoodsInfo";
 import DetailParamInfo from "./childdetail/DetailParamInfo";
 import DetailCommentInfo from "./childdetail/DetailCommentInfo";
-import BackTop from "components/content/Backtop/BackTop";
+import DetailBottomBar from "./childdetail/DetailBottomBar";
+
+
 
 import {
   getDetail,
@@ -43,7 +46,7 @@ import {
   GoodsParam
 } from "network/detail";
 import { debounce } from "../../common/utils";
-import { itemlisennermixin } from "../../common/mixin";
+import { itemlisennermixin,backTopMixin} from "../../common/mixin";
 
 import Goodslist from "components/content/goods/Goodslist";
 import Scroll from "components/common/scroll/Scroll";
@@ -58,17 +61,17 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
+    DetailBottomBar,
 
-    BackTop,
     Goodslist,
     Scroll
   },
-  mixins: [itemlisennermixin],
+  mixins: [itemlisennermixin,backTopMixin],
   data() {
     //这里存放数据
     return {
       iid: null,
-      isshow: false,
+      // isshow: false,
       topImages: [],
       goods: {},
       shop: {},
@@ -76,9 +79,9 @@ export default {
       paramInfo: {},
       commentInfo: {},
       Recommend: {},
-      ZhutiTopy:[],
-      getZhutiTopy:null,
-      currentindex :0
+      ZhutiTopy: [],
+      getZhutiTopy: null,
+      currentindex: 0
     };
   },
   //监听属性 类似于data概念
@@ -87,35 +90,35 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    titlecilck(index){
-      console.log(index)
-      this.$refs.scroll.scrollTo(0,-this.ZhutiTopy[index],400)
+    titlecilck(index) {
+      console.log(index);
+      this.$refs.scroll.scrollTo(0, -this.ZhutiTopy[index], 400);
     },
     imgLoad() {
       this.refresh();
       // this.$refs.scroll.refresh();
-      this.getZhutiTopy()
+      this.getZhutiTopy();
     },
-    backtop() {
-      console.log('返回顶部');
-      this.$refs.scroll.scrollTo(0, 0, 300);
-    },
+    // backtop() {
+    //   console.log("返回顶部");
+    //   this.$refs.scroll.scrollTo(0, 0, 300);
+    // },
     contentScroll(position) {
-      const positiony = -position.y
-      let length = this.ZhutiTopy.length
-      for(let i=0; i<length;i++){
-        
-        if(this.currentindex !== i &&
-          ((i<length-1 && positiony>=this.ZhutiTopy[i]&&positiony< this.ZhutiTopy[i+1])||(i === length && positiony >= this.ZhutiTopy[i]))
-          ){
+      const positiony = -position.y;
+      let length = this.ZhutiTopy.length;
+      for (let i = 0; i < length - 1; i++) {
+        if (
+          this.currentindex !== i &&
+          positiony >= this.ZhutiTopy[i] &&
+          positiony < this.ZhutiTopy[i + 1]
+        ) {
           this.currentindex = i;
-          console.log(this.currentindex)
-          this.$refs.nav.currentindex = this.currentindex
+          console.log(this.currentindex);
+          this.$refs.nav.currentindex = this.currentindex;
         }
-
       }
       // 返回顶部
-      this.isshow = position.y < -1000;
+      this.showBackTop = position.y < -1000;
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -163,25 +166,22 @@ export default {
       this.Recommend = res.data.list;
     });
 
-    this.getZhutiTopy = debounce(()=>{
-      this.ZhutiTopy = []
-        this.ZhutiTopy.push(44)
-        this.ZhutiTopy.push(this.$refs.params.$el.offsetTop  )
-        this.ZhutiTopy.push(this.$refs.comment.$el.offsetTop )
-        this.ZhutiTopy.push(this.$refs.recommend.$el.offsetTop)
-        console.log(this.ZhutiTopy)
-    },100)
+    this.getZhutiTopy = debounce(() => {
+      this.ZhutiTopy = [];
+      this.ZhutiTopy.push(44);
+      this.ZhutiTopy.push(this.$refs.params.$el.offsetTop);
+      this.ZhutiTopy.push(this.$refs.comment.$el.offsetTop);
+      this.ZhutiTopy.push(this.$refs.recommend.$el.offsetTop);
+      this.ZhutiTopy.push(Number.MAX_VALUE);
+      console.log(this.ZhutiTopy);
+    }, 100);
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    
-  },
+  mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {
-     
-  }, //生命周期 - 更新之后
+  updated() {}, //生命周期 - 更新之后
   beforeDestroy() {}, //生命周期 - 销毁之前
   destroyed() {}, //生命周期 - 销毁完成
   activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
@@ -200,6 +200,6 @@ export default {
   background-color: #fff;
 }
 .content {
-  height: calc(100% - 44px);
+  height: calc(100% - 44px - 55px);
 }
 </style>

@@ -32,7 +32,7 @@
       </div>
     </scroll>
 
-    <back-top @click.native="backtop" v-show="isshow" />
+    <back-top @click.native="backtop" v-show="showBackTop" />
   </div>
 </template>
 
@@ -42,7 +42,6 @@ import Tabcontrol from "components/content/tabcontrol/Tabcontrol";
 import Scroll from "components/common/scroll/Scroll";
 import BScroll from "@better-scroll/core";
 import Pullup from "@better-scroll/pull-up";
-import BackTop from "components/content/Backtop/BackTop";
 BScroll.use(Pullup);
 
 import Homeswiper from "./children/homeswiper";
@@ -52,7 +51,7 @@ import Goodslist from "components/content/goods/Goodslist";
 
 import { gethome, getgoods } from "network/home";
 import { debounce } from "../../common/utils";
-import {itemlisennermixin} from '../../common/mixin'
+import {itemlisennermixin,backTopMixin} from '../../common/mixin'
 import { NEW, POP, SELL, BACKTOP_DISTANCE } from "@/common/const";
 import { type } from "os";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
@@ -65,14 +64,13 @@ export default {
     NavBar,
     Tabcontrol,
     Scroll,
-    BackTop,
 
     Homeswiper,
     Hometuijian,
     Fucher,
     Goodslist
   },
-  mixins:[itemlisennermixin],
+  mixins:[itemlisennermixin,backTopMixin],
   data() {
     //这里存放数据
     return {
@@ -84,7 +82,7 @@ export default {
         sell: { page: 1, list: [] }
       },
       currentType: "pop",
-      isshow: false,
+      
       tabOffsetTop: 0,
       isTabFixed: false,
       sateY:0
@@ -126,7 +124,7 @@ export default {
       this.isTabFixed = position.y < -this.tabOffsetTop;
 
       // 2.决定backTop是否显示
-      this.isshow = position.y < -BACKTOP_DISTANCE;
+      this.showBackTop = position.y < -BACKTOP_DISTANCE;
     },
     // 上拉加载
     loadMore() {

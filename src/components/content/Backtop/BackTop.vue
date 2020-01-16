@@ -42,7 +42,8 @@ export default {
   bottom: 55px;
 }
 .back-top img{
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
+  margin-bottom: 20px;
 }
 </style>

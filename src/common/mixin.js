@@ -1,6 +1,11 @@
 import {POP, NEW, SELL} from "./const";
 import { debounce } from "./utils";
+import BackTop from "components/content/Backtop/BackTop";
+
 export const backTopMixin = {
+  components:{
+    BackTop
+  },
   data: function () {
     return {
       showBackTop: false
