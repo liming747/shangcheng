@@ -19,7 +19,7 @@
         <goodslist ref="recommend" :goods="Recommend" />
       </div>
     </scroll>
-    <Detail-bottom-bar />
+    <Detail-bottom-bar @addToCart="addToCart"/>
     <back-top @click.native="backtop" v-show="showBackTop" />
   </div>
 </template>
@@ -90,6 +90,19 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    addToCart(){
+      console.log('tianjia')
+      // 获取商品数据
+      const product = {}
+      product.image = this.topImages[0],
+      product.title = this.goods.title,
+      product.desc = this.goods.desc,
+      product.price = this.goods.newPrice,
+      product.iid = this.iid
+      // 添加到购物车
+      // this.$store.commit('addcart',product)
+      this.$store.dispatch('addcart',product)
+    },
     titlecilck(index) {
       console.log(index);
       this.$refs.scroll.scrollTo(0, -this.ZhutiTopy[index], 400);
@@ -99,10 +112,6 @@ export default {
       // this.$refs.scroll.refresh();
       this.getZhutiTopy();
     },
-    // backtop() {
-    //   console.log("返回顶部");
-    //   this.$refs.scroll.scrollTo(0, 0, 300);
-    // },
     contentScroll(position) {
       const positiony = -position.y;
       let length = this.ZhutiTopy.length;
@@ -169,9 +178,9 @@ export default {
     this.getZhutiTopy = debounce(() => {
       this.ZhutiTopy = [];
       this.ZhutiTopy.push(44);
-      this.ZhutiTopy.push(this.$refs.params.$el.offsetTop);
-      this.ZhutiTopy.push(this.$refs.comment.$el.offsetTop);
-      this.ZhutiTopy.push(this.$refs.recommend.$el.offsetTop);
+      this.ZhutiTopy.push(this.$refs.params.$el.offsetTop -44);
+      this.ZhutiTopy.push(this.$refs.comment.$el.offsetTop-44);
+      this.ZhutiTopy.push(this.$refs.recommend.$el.offsetTop-44);
       this.ZhutiTopy.push(Number.MAX_VALUE);
       console.log(this.ZhutiTopy);
     }, 100);

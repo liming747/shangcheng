@@ -12,7 +12,6 @@ Vue.prototype.$bus =  new Vue()
 new Vue({
   router,
   store,
-
   // render:function(h){
   //   return h(app)
   // }

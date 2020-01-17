@@ -52,6 +52,7 @@ import BScroll from '@better-scroll/core'
         this.scroll.on('pullingUp', () => {
           console.log('上拉加载');
           this.$emit('pullingUp')
+          this.refresh()
         })
       },
       refresh() {

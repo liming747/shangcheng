@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import mutations from './mutations'
+import actions from './actions'
 
 Vue.use(Vuex)
-const modulesA = {
+const modulesA = {  
   state:{
     name:"yizeruier"
   },
@@ -15,70 +17,14 @@ const modulesA = {
 }
 export default new Vuex.Store({
   state: {
-    abc: 1000,
-    students: [
-      { id: 1, name: 'liming', age: 20 },
-      { id: 1, name: 'liming1', age: 30 },
-      { id: 1, name: 'liming2', age: 10 },
-      { id: 1, name: 'liming3', age: 50 },
-      { id: 1, name: 'limin4', age: 120 }
-    ],
-    info: {
-      name: 'liming',
-      age: 20,
-      height: 100
-    }
+    carlist:[]
   },
-  mutations: {
-    add(state) {
-      state.abc++
-    },
-    der(state) {
-      state.abc--
-    },
-    addcout(state, count) {
-      state.abc += count
-    },
-    tianjiaxuesheng(state, stu) {
-      state.students.push(stu)
-    },
-    gaibian(state) {
-      state.info.name = 'hahaha'
-    },
-  },
+  mutations,
   getters: {
-    dayu20(state) {
-      return state.students.filter(s => s.age > 20)
-    },
-    dayu20length(state, getters) {
-      return getters.dayu20.length
-    },
-    // dayu20tu(state){
-    //   return function(age){
-    //       return state.students.filter(s => s.age > age)
-    //   }
-    // },
-    dayu20tu(state) {
-      return age => {
-        return state.students.filter(s => s.age > age)
-      }
-    },
-
+    
   },
-  actions: {
-    // context  == store 
-    agaibian: function (context, paylode) {
-      console.log(context)
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          context.commit('gaibian')
-          console.log(paylode)
-          resolve('11111')
-        }, 1000);
-      })
-    }
-
-  },
+   // 在actions里 context 表示 state
+  actions,
   modules: {
     a:modulesA
   }
