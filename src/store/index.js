@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
 import actions from './actions'
+import getters from './getters'
 
 Vue.use(Vuex)
 const modulesA = {  
@@ -20,9 +21,7 @@ export default new Vuex.Store({
     carlist:[]
   },
   mutations,
-  getters: {
-    
-  },
+  getters,
    // 在actions里 context 表示 state
   actions,
   modules: {

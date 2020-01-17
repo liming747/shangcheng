@@ -20,7 +20,7 @@
       </div>
     </scroll>
     <Detail-bottom-bar @addToCart="addToCart"/>
-    <back-top @click.native="backtop" v-show="showBackTop" />
+    <back-top @click.native="backTop" v-show="showBackTop" />
   </div>
 </template>
 

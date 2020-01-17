@@ -32,7 +32,7 @@
       </div>
     </scroll>
 
-    <back-top @click.native="backtop" v-show="showBackTop" />
+    <back-top @click.native="backTop" v-show="showBackTop" />
   </div>
 </template>
 
@@ -115,10 +115,10 @@ export default {
       this.$refs.tabcontrol1.currentindex = index;
       this.$refs.tabcontrol2.currentindex = index;
     },
-    backtop() {
-      console.log(11);
-      this.$refs.scroll.scrollTo(0, 0, 300);
-    },
+    // backtop() {
+    //   console.log(11);
+    //   this.$refs.scroll.scrollTo(0, 0, 300);
+    // },
     contentScroll(position) {
       // 1.决定tabFixed是否显示
       this.isTabFixed = position.y < -this.tabOffsetTop;
