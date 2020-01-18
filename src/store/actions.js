@@ -11,16 +11,20 @@ export default{
     // 判断oldproduct
 
     // 检测是否有商品 
-    let oldproduct = context.state.carlist.find(item =>
-       item.iid === payload.iid 
-    )
-    if(oldproduct){
-      oldproduct.count += 1
-      context.commit('Addcounter',oldproduct)
-    }else{
-      payload.count = 1
-      // context.state.carlist.push(payload)
-      context.commit('addTocart',payload)
-    } 
+    return new Promise((resolve,reject)=>{
+      let oldproduct = context.state.carlist.find(item =>
+        item.iid === payload.iid 
+     )
+     if(oldproduct){
+       oldproduct.count += 1
+       context.commit('Addcounter',oldproduct)
+       resolve('当前数量+1')
+     }else{
+       payload.count = 1
+       // context.state.carlist.push(payload)
+       context.commit('addTocart',payload)
+       resolve('添加新商品')
+     } 
+    })
   }
 }

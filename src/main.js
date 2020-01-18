@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import toast from './components/common/Toast'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 
@@ -10,7 +11,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 //产品提示信息👇
 Vue.config.productionTip = false,
 Vue.use(ElementUI);
+Vue.use(toast);
+
 Vue.prototype.$bus =  new Vue()
+
 new Vue({
   router,
   store,

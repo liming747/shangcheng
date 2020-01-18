@@ -21,6 +21,7 @@
     </scroll>
     <Detail-bottom-bar @addToCart="addToCart"/>
     <back-top @click.native="backTop" v-show="showBackTop" />
+    <!-- <Toast :message = 'message' :show = "show"/> -->
   </div>
 </template>
 
@@ -50,6 +51,7 @@ import { itemlisennermixin,backTopMixin} from "../../common/mixin";
 
 import Goodslist from "components/content/goods/Goodslist";
 import Scroll from "components/common/scroll/Scroll";
+import { mapActions } from 'vuex'
 export default {
   name: "detail",
   //import引入的组件需要注入到对象中才能使用
@@ -62,6 +64,7 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     DetailBottomBar,
+    // Toast,
 
     Goodslist,
     Scroll
@@ -81,7 +84,8 @@ export default {
       Recommend: {},
       ZhutiTopy: [],
       getZhutiTopy: null,
-      currentindex: 0
+      currentindex: 0,
+   
     };
   },
   //监听属性 类似于data概念
@@ -90,6 +94,7 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    ...mapActions(['addcart']),
     addToCart(){
       console.log('tianjia')
       // 获取商品数据
@@ -101,7 +106,21 @@ export default {
       product.iid = this.iid
       // 添加到购物车
       // this.$store.commit('addcart',product)
-      this.$store.dispatch('addcart',product)
+      this.addcart(product).then(res=>{
+        // this.message = res;
+        // this.show = true;
+        // console.log(res);
+        // setTimeout(() => {
+        //   this.show = false;
+        //   this.message = ''
+        // }, 1500);
+        this.$toast.show(res,2000)
+        console.log(this.$toast)
+      })
+      // this.$store.dispatch('addcart',product).then(res=>{
+      //   console.log(res)
+      // })
+
     },
     titlecilck(index) {
       console.log(index);

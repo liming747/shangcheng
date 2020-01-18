@@ -4,7 +4,7 @@
     <CheckButton class="select-all" :ischecked="isSelectAll" @click.native="checkBtnClick"></CheckButton>
     <span>全选</span>
     <span class="total-price">合计: ¥{{totalPrice}}</span>
-    <span class="buy-product">去计算({{checkLength}})</span>
+    <div class="buy-product" @click="jisuanclick">去计算({{checkLength}})</div>
   </div>
 </template>
 
@@ -64,6 +64,11 @@
           this.carlist.forEach(item => item.checked = true)
         }
         // this.carlist.forEach(item => item.checked = !this.isSelectAll)
+      },
+      jisuanclick(){
+       if(!this.isSelectAll){
+          this.$toast.show('请选择商品',1500)
+       }
       }
     }
 	}
