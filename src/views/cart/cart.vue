@@ -67,7 +67,13 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-    ...mapGetters(["Cartlength", "carlist"])
+    ...mapGetters(["Cartlength", "carlist"]),
+     carlist() {
+		    return this.$store.getters.carlist
+      },
+      cartCount() {
+		    return this.$store.getters.carlist
+      }
   },
   //监控data中的数据变化
   watch: {},

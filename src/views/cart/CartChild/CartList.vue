@@ -1,14 +1,16 @@
 <template>
   <div class="cart">
       <cart-list-item v-for="item in cartList" :key="item.iid" :item-info="item"></cart-list-item>
-        <p style="  text-align: center;margin-top:15px">没有更多了</p> 
+        <p style="text-align: center;margin-top:15px" v-if=" type =='true'">没有更多了</p> 
+        <p style="text-align: center;margin-top:15px" v-else>暂无数据</p>
   </div>
 </template>
 
 <script>
 import CartListItem from "./CartListItem";
+
 export default {
-  name: "CartList",
+  name: "cartList",
   props: {
     cartList: {
       type: Array,
@@ -17,22 +19,25 @@ export default {
       }
     }
   },
+  components:{
+  CartListItem
+  },
   data() {
     return {
+       type:'true'
     };
   },
   methods: {
-   
-  },
-  computed: {
     
   },
-  components: {
-    CartListItem,
-    
-  },
-  
-};
+  activated(){
+    if(this.cartList.length){
+      this.type = 'true'
+    }else{
+      this.type = 'false'
+    }
+  }
+}
 </script>
 
 <style scoped>
