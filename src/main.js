@@ -6,14 +6,21 @@ import axios from 'axios'
 import toast from './components/common/Toast'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
+import Fastclick from 'fastclick'
+import Lazyload from 'vue-lazyload'
 
 // import  './components/element-#111212/index.css'
 //产品提示信息👇
 Vue.config.productionTip = false,
 Vue.use(ElementUI);
 Vue.use(toast);
-
+Vue.use(Lazyload,{
+  loading:require('./assets/img/common/placeholder.png')
+})
 Vue.prototype.$bus =  new Vue()
+
+// 解决移动端300毫秒延迟
+Fastclick.attach(document.body)
 
 new Vue({
   router,
