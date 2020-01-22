@@ -1,48 +1,81 @@
 <template>
-<div>
-  <h2>分类哈哈哈</h2>
-</div>
+  <div class="fenlei">
+    <FenleiNavBar  />
+    <div class="center">
+      <FenleiTabBar :Fenleilist="Fenleilist" @selectItem="selectItem" />
+    </div>
+  </div>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
+import FenleiNavBar from "./FenleiChild/fenleitop";
+import FenleiTabBar from "./FenleiChild/fenleibiaoqian";
 
+import { getfenlei, getfenleiyulan, getCategoryDetail } from "network/category";
 export default {
-name:'',
-//import引入的组件需要注入到对象中才能使用
-components: {},
-data() {
-//这里存放数据
-return {
+  name: "",
+  //import引入的组件需要注入到对象中才能使用
+  components: {
+    FenleiNavBar,
+    FenleiTabBar
+  },
+  data() {
+    //这里存放数据
+    return {
+      Fenleilist: [],
+      shopindex: 0
+    };
+  },
+  //监听属性 类似于data概念
+  computed: {},
+  //监控data中的数据变化
+  watch: {},
+  //方法集合
+  methods: {
+    getfenlei() {
+      getfenlei().then(res => {
+        console.log(res);
+        this.Fenleilist = res.data.category.list;
+      });
+    },
+    getfenleiyulan() {
+      getfenleiyulan(this.Fenleilist[this.shopindex].maitKey).then(res => {
+        console.log(res);
+      });
+    },
+    selectItem(index) {
+      console.log(index);
+      this.shopindex = index;
+    }
+  },
+  //生命周期 - 创建完成（可以访问当前this实例）
+  created() {
+  },
+  //生命周期 - 挂载完成（可以访问DOM元素）
+  mounted() {
 
+  },
+  beforeCreate() {}, //生命周期 - 创建之前
+  beforeMount() {}, //生命周期 - 挂载之前
+  beforeUpdate() {}, //生命周期 - 更新之前
+  updated() {
+    this.getfenleiyulan();
+
+  }, //生命周期 - 更新之后
+  beforeDestroy() {}, //生命周期 - 销毁之前
+  destroyed() {}, //生命周期 - 销毁完成
+  activated() {
+    this.getfenlei();
+  } //如果页面有keep-alive缓存功能，这个函数会触发
 };
-},
-//监听属性 类似于data概念
-computed: {},
-//监控data中的数据变化
-watch: {},
-//方法集合
-methods: {
-
-},
-//生命周期 - 创建完成（可以访问当前this实例）
-created() {
-
-},
-//生命周期 - 挂载完成（可以访问DOM元素）
-mounted() {
-
-},
-beforeCreate() {}, //生命周期 - 创建之前
-beforeMount() {}, //生命周期 - 挂载之前
-beforeUpdate() {}, //生命周期 - 更新之前
-updated() {}, //生命周期 - 更新之后
-beforeDestroy() {}, //生命周期 - 销毁之前
-destroyed() {}, //生命周期 - 销毁完成
-activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
-}
 </script>
 <style  scoped>
-
+.fenlei {
+  height: 100vh;
+}
+.center {
+  height: calc(100% - 44px - 49px);
+}
 </style>
