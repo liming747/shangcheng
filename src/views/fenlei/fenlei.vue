@@ -2,7 +2,8 @@
   <div class="fenlei">
     <FenleiNavBar  />
     <div class="center">
-      <FenleiTabBar :Fenleilist="Fenleilist" @selectItem="selectItem" />
+      <FenleiTabBar :Fenleilist="Fenleilist" @selectItem="selectItem"  class="centerleft"/>
+      <Fenleicenter :Fenleicenterlist="Fenleicenterlist"/>
     </div>
   </div>
 </template>
@@ -12,6 +13,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import FenleiNavBar from "./FenleiChild/fenleitop";
 import FenleiTabBar from "./FenleiChild/fenleibiaoqian";
+import Fenleicenter from './FenleiChild/fenleicontent'
 
 import { getfenlei, getfenleiyulan, getCategoryDetail } from "network/category";
 export default {
@@ -19,13 +21,16 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
     FenleiNavBar,
-    FenleiTabBar
+    FenleiTabBar,
+    Fenleicenter
+
   },
   data() {
     //这里存放数据
     return {
       Fenleilist: [],
-      shopindex: 0
+      shopindex: 0,
+      Fenleicenterlist:[]
     };
   },
   //监听属性 类似于data概念
@@ -38,16 +43,23 @@ export default {
       getfenlei().then(res => {
         console.log(res);
         this.Fenleilist = res.data.category.list;
+        this.getfenleiyulan();
+
       });
     },
     getfenleiyulan() {
       getfenleiyulan(this.Fenleilist[this.shopindex].maitKey).then(res => {
-        console.log(res);
+        console.log(res)
+        this.Fenleicenterlist = res.data.list
+        if(res.data.success = true ){
+          return;
+        }
       });
     },
     selectItem(index) {
       console.log(index);
       this.shopindex = index;
+      this.getfenleiyulan();
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -61,7 +73,7 @@ export default {
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
   updated() {
-    this.getfenleiyulan();
+   
 
   }, //生命周期 - 更新之后
   beforeDestroy() {}, //生命周期 - 销毁之前
@@ -77,5 +89,8 @@ export default {
 }
 .center {
   height: calc(100% - 44px - 49px);
+}
+.centerleft{
+  float: left;
 }
 </style>
