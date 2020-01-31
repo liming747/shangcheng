@@ -38,6 +38,7 @@ export const tabControlMixin = {
           break
       }
       console.log(this.currentType);
+      this.getCategoryDetail1()
     }
   }
 }

@@ -3,7 +3,7 @@
     <FenleiNavBar  />
     <div class="center">
       <FenleiTabBar :Fenleilist="Fenleilist" @selectItem="selectItem"  class="centerleft"/>
-      <Fenleicenter :Fenleicenterlist="Fenleicenterlist"/>
+      <Fenleicenter :Fenleicenterlist="Fenleicenterlist" @tabclick="tabClick" :detail="Detail"/>
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@ import FenleiTabBar from "./FenleiChild/fenleibiaoqian";
 import Fenleicenter from './FenleiChild/fenleicontent'
 
 import { getfenlei, getfenleiyulan, getCategoryDetail } from "network/category";
+import {tabControlMixin} from '@/common/mixin'
 export default {
   name: "",
   //import引入的组件需要注入到对象中才能使用
@@ -30,30 +31,37 @@ export default {
     return {
       Fenleilist: [],
       shopindex: 0,
-      Fenleicenterlist:[]
+      Fenleicenterlist:[],
+      miniWallkey:'',
+      Detail:[]
     };
   },
+  mixins:[tabControlMixin],
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
+     getCategoryDetail1(){
+      getCategoryDetail(this.miniWallkey,this.currentType).then(res=>{
+        console.log(res)
+        this.Detail = res
+      })
+    },
     getfenlei() {
       getfenlei().then(res => {
-        console.log(res);
+        // console.log(res);
         this.Fenleilist = res.data.category.list;
         this.getfenleiyulan();
-
       });
-    },
+    },  
     getfenleiyulan() {
       getfenleiyulan(this.Fenleilist[this.shopindex].maitKey).then(res => {
-        console.log(res)
+        // console.log(res)
         this.Fenleicenterlist = res.data.list
-        if(res.data.success = true ){
-          return;
-        }
+        this.miniWallkey = this.Fenleilist[this.shopindex].miniWallkey
+        this.getCategoryDetail1()
       });
     },
     selectItem(index) {

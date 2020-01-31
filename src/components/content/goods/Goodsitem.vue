@@ -34,7 +34,7 @@ export default {
   //监听属性 类似于data概念
   computed: {
     showimage(){
-      return this.goods.image || this.goods.show.img
+      return this.goods.image || this.goods.show.img || this.goods.img
    }
   },
   //监控data中的数据变化

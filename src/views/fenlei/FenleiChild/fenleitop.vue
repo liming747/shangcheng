@@ -1,7 +1,7 @@
 <template>
 <div>
   <nav-bar class="fenlei-nav">
-      <div slot="center">商品分类</div>
+    <div slot="center">商品分类</div>
   </nav-bar>
 </div>
 </template>
