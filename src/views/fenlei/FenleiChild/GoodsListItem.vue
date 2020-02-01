@@ -27,7 +27,8 @@
         let iid = this.goods.iid;
 
         // 2.跳转到详情页面
-        this.$router.push({path: '/detail', query: {iid}})
+         console.log("跳转详情页")
+      this.$router.push('/detail/' + this.goods.iid)
       }
     },
     computed: {
